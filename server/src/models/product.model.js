@@ -4,11 +4,17 @@ const mongoose = require('mongoose');
 const productSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        trim: true,
+        minlength: 1,
+        maxlength: 255
     },
     description: {
         type: String,
-        required: true
+        required: true,
+        trim: true,
+        minlength: 1,
+        maxlength: 5000
     },
     type: {
         type: String,
@@ -17,7 +23,8 @@ const productSchema = new mongoose.Schema({
     },
     price: {
         type: Number,
-        required: true
+        required: true,
+        min: 1
     },
     couponCodeAvailable: {
         type: Boolean,
@@ -25,7 +32,8 @@ const productSchema = new mongoose.Schema({
     },
     quantity: {
         type: Number,
-        required: true
+        required: true,
+        min: 1
     },
     owner_id: {
         type: mongoose.Schema.Types.ObjectId,

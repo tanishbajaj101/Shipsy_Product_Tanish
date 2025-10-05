@@ -87,7 +87,13 @@ class UserService {
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({ username, hashedPassword });
         await newUser.save();
-        return newUser;
+        // Return a safe projection without sensitive fields
+        return {
+            _id: newUser._id,
+            userId: newUser.userId,
+            username: newUser.username,
+            products_created: newUser.products_created || []
+        };
     }
 
     async login(username, password) {
