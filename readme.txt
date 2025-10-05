@@ -1,3 +1,4 @@
+use react and node.js to build the project
 Product schema:
 name
 description
