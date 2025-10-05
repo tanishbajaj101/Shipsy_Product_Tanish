@@ -36,7 +36,8 @@ const CreateProductPage = (props) => {
     };
 
     return (
-        <div className="container">
+        <div className="container center-page">
+            <div className="form-card">
             <h1>Create Product</h1>
             <form onSubmit={handleCreateProduct}>
                 <div className="form-group">
@@ -70,6 +71,7 @@ const CreateProductPage = (props) => {
                 </div>
                 <button type="submit" className="btn btn-primary">Create</button>
             </form>
+            </div>
         </div>
     );
 };

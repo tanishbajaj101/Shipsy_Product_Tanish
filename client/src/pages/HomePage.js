@@ -99,7 +99,7 @@ const HomePage = () => {
 
     return (
         <div className="container">
-            <h1>All Products</h1>
+            <h1 style={{ marginBottom: 12 }}>All Products</h1>
             <div className="filters">
                 <input type="text" placeholder="Search by name" value={searchTerm} onChange={handleSearchChange} />
                 <select name="type" value={filters.type} onChange={handleFilterChange}>
@@ -154,7 +154,7 @@ const HomePage = () => {
                             {!showCouponToggle && (
                                 <div className="coupon-badge coupon-badge-muted">No Coupon</div>
                             )}
-                            <div className="qty-actions" style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8 }}>
+                            <div className="qty-actions" style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8 }}>
                                 <button
                                     type="button"
                                     className="btn"

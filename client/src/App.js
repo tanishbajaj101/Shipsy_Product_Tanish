@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import './index.css';
 
 import AuthService from './services/auth.service';
 
@@ -25,12 +26,17 @@ const App = () => {
         setCurrentUser(AuthService.getCurrentUser());
     };
 
+    useEffect(() => {
+        const root = document.documentElement;
+        root.setAttribute('data-theme', 'light');
+    }, []);
+
     return (
         <Router>
-            <div>
-                <nav className="navbar navbar-expand navbar-dark bg-dark">
+            <div className="app-shell">
+                <nav className="navbar navbar-expand navbar-dark app-navbar">
                     <Link to={'/'} className="navbar-brand">
-                        ProductApp
+                        <span className="app-brand">ProductApp</span>
                     </Link>
                     <div className="navbar-nav mr-auto">
                         <li className="nav-item">
@@ -64,29 +70,29 @@ const App = () => {
                         )}
                     </div>
 
-                    {currentUser ? (
-                        <div className="navbar-nav ml-auto">
+                    <div className="navbar-nav ml-auto" style={{ alignItems: 'center' }}>
+                        {currentUser ? (
                             <li className="nav-item">
                                 <a href="/login" className="nav-link" onClick={logOut}>
                                     Logout
                                 </a>
                             </li>
-                        </div>
-                    ) : (
-                        <div className="navbar-nav ml-auto">
-                            <li className="nav-item">
-                                <Link to={'/login'} className="nav-link">
-                                    Login
-                                </Link>
-                            </li>
+                        ) : (
+                            <>
+                                <li className="nav-item">
+                                    <Link to={'/login'} className="nav-link">
+                                        Login
+                                    </Link>
+                                </li>
 
-                            <li className="nav-item">
-                                <Link to={'/register'} className="nav-link">
-                                    Sign Up
-                                </Link>
-                            </li>
-                        </div>
-                    )}
+                                <li className="nav-item">
+                                    <Link to={'/register'} className="nav-link">
+                                        Sign Up
+                                    </Link>
+                                </li>
+                            </>
+                        )}
+                    </div>
                 </nav>
 
                 <div className="container mt-3">

@@ -33,14 +33,9 @@ const RegisterPage = (props) => {
     };
 
     return (
-        <div className="col-md-12">
-            <div className="card card-container">
-                <img
-                    src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-                    alt="profile-img"
-                    className="profile-img-card"
-                />
-
+        <div className="container center-page">
+            <div className="form-card">
+                <h1>Register</h1>
                 <form onSubmit={handleRegister}>
                     <div className="form-group">
                         <label htmlFor="username">Username</label>
@@ -66,7 +61,7 @@ const RegisterPage = (props) => {
                         />
                     </div>
 
-                    <div className="form-group">
+                    <div className="form-group" style={{ marginTop: 12 }}>
                         <button className="btn btn-primary btn-block">
                             <span>Register</span>
                         </button>

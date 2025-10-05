@@ -79,7 +79,7 @@ const CartPage = () => {
                                 <div className="product-price-row">
                                     <span className="price-regular">${item.product.price}</span>
                                 </div>
-                                <div className="qty-actions" style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8 }}>
+                                <div className="qty-actions" style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8 }}>
                                     <button
                                         type="button"
                                         className="btn"
@@ -100,9 +100,22 @@ const CartPage = () => {
                             </div>
                         ))}
                     </div>
-                    <div className="cart-summary">
-                        <h3>Total: ${total.toFixed(2)}</h3>
-                        <button className="btn btn-success" onClick={checkout}>Buy</button>
+                    <div className="form-card" style={{ maxWidth: 420, marginTop: 16 }}>
+                        <h3 style={{ marginTop: 0 }}>Order Summary</h3>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)' }}>
+                            <span>Subtotal</span>
+                            <span>${total.toFixed(2)}</span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6, color: 'var(--text-muted)' }}>
+                            <span>Shipping</span>
+                            <span>$0.00</span>
+                        </div>
+                        <hr style={{ borderColor: 'var(--border)' }} />
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700 }}>
+                            <span>Total</span>
+                            <span>${total.toFixed(2)}</span>
+                        </div>
+                        <button className="btn btn-success" style={{ width: '100%', marginTop: 12 }} onClick={checkout}>Buy</button>
                     </div>
                 </>
             )}
