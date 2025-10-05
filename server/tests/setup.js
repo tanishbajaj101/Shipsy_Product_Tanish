@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
+const { connectDatabase, disconnectDatabase } = require('../src/db');
 
 // Ensure test env and JWT secret are set before app/routes are imported by tests
 process.env.NODE_ENV = 'test';
@@ -12,7 +13,7 @@ beforeAll(async () => {
 	mongoServer = await MongoMemoryServer.create();
 	const uri = mongoServer.getUri();
 	process.env.MONGO_URI = uri;
-	await mongoose.connect(uri);
+	await connectDatabase(uri);
 });
 
 afterEach(async () => {
@@ -23,7 +24,7 @@ afterEach(async () => {
 });
 
 afterAll(async () => {
-	await mongoose.connection.close();
+	await disconnectDatabase();
 	if (mongoServer) await mongoServer.stop();
 });
 

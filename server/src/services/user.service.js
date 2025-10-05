@@ -80,7 +80,8 @@ const AuthManager = require('./auth.manager');
 
 class UserService {
     constructor(secret) {
-        this.authManager = new AuthManager(secret);
+        const resolvedSecret = secret || process.env.JWT_SECRET || 'your_jwt_secret';
+        this.authManager = new AuthManager(resolvedSecret);
     }
 
     async register(username, password) {

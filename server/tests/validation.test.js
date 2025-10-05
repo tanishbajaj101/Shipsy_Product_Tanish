@@ -1,14 +1,13 @@
 const request = require('supertest');
 const app = require('../src/index');
-const UserService = require('../src/services/user.service');
 
 describe('Validation Testing', () => {
-	let token;
-	beforeAll(async () => {
-		const userService = new UserService(process.env.JWT_SECRET);
-		await userService.register('alice', 'password123');
-		token = await userService.login('alice', 'password123');
-	});
+    let token;
+    beforeAll(async () => {
+        await request(app).post('/api/users/register').send({ username: 'alice', password: 'password123' });
+        const login = await request(app).post('/api/users/login').send({ username: 'alice', password: 'password123' });
+        token = login.body.token;
+    });
 
 	test('rejects missing required fields on product create', async () => {
 		const res = await request(app)

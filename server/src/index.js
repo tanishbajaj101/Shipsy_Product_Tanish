@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const { connectDatabase } = require('./db');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
@@ -15,9 +16,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB (skip during Jest tests; tests manage their own connection)
-if (typeof process.env.JEST_WORKER_ID === 'undefined') {
-    mongoose.connect(process.env.MONGO_URI)
+// Connect to MongoDB unless running tests
+if (process.env.NODE_ENV !== 'test') {
+    connectDatabase()
         .then(() => console.log('MongoDB connected'))
         .catch(err => console.log(err));
 }

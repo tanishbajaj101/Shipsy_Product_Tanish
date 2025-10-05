@@ -15,6 +15,7 @@ router.get('/', async (req, res) => {
         const products = await productService.list_all_products(filters, sortBy, search);
         res.json(products);
     } catch (error) {
+        console.error('GET /products error:', error.message);
         res.status(500).json({ message: error.message });
     }
 });
@@ -25,6 +26,7 @@ router.get('/my-products', authManager.isAuthenticated.bind(authManager), async 
         const products = await productService.list_user_products(req.user.userId);
         res.json(products);
     } catch (error) {
+        console.error('GET /products/my-products error:', error.message);
         res.status(500).json({ message: error.message });
     }
 });
@@ -36,6 +38,7 @@ router.post('/', authManager.isAuthenticated.bind(authManager), async (req, res)
         console.log(`Product created: ${product.name}`);
         res.status(201).json(product);
     } catch (error) {
+        console.error('POST /products error:', error.message);
         res.status(400).json({ message: error.message });
     }
 });
@@ -47,6 +50,13 @@ router.put('/:id', authManager.isAuthenticated.bind(authManager), async (req, re
         console.log(`Product updated: ${product.name}`);
         res.json(product);
     } catch (error) {
+        console.error('PUT /products/:id error:', error.message);
+        if (error.message === 'Product not found') {
+            return res.status(404).json({ message: error.message });
+        }
+        if (error.message && error.message.toLowerCase().includes('not authorized')) {
+            return res.status(403).json({ message: error.message });
+        }
         res.status(400).json({ message: error.message });
     }
 });
@@ -58,6 +68,13 @@ router.delete('/:id', authManager.isAuthenticated.bind(authManager), async (req,
         console.log(`Product deleted: ${req.params.id}`);
         res.json({ message: 'Product deleted successfully' });
     } catch (error) {
+        console.error('DELETE /products/:id error:', error.message);
+        if (error.message === 'Product not found') {
+            return res.status(404).json({ message: error.message });
+        }
+        if (error.message && error.message.toLowerCase().includes('not authorized')) {
+            return res.status(403).json({ message: error.message });
+        }
         res.status(400).json({ message: error.message });
     }
 });
