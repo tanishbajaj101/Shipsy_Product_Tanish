@@ -1,8 +1,10 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 
-const LoginPage = (props) => {
+const LoginPage = ({ login }) => {
+    const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
@@ -13,7 +15,8 @@ const LoginPage = (props) => {
 
         AuthService.login(username, password).then(
             () => {
-                props.history.push('/my-products');
+                login();
+                navigate('/my-products');
                 window.location.reload();
             },
             error => {

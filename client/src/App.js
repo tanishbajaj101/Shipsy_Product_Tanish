@@ -12,18 +12,15 @@ import MyProductsPage from './pages/MyProductsPage';
 import CreateProductPage from './pages/CreateProductPage';
 
 const App = () => {
-    const [currentUser, setCurrentUser] = useState(undefined);
-
-    useEffect(() => {
-        const user = AuthService.getCurrentUser();
-
-        if (user) {
-            setCurrentUser(user);
-        }
-    }, []);
+    const [currentUser, setCurrentUser] = useState(AuthService.getCurrentUser());
 
     const logOut = () => {
         AuthService.logout();
+        setCurrentUser(undefined);
+    };
+
+    const login = () => {
+        setCurrentUser(AuthService.getCurrentUser());
     };
 
     return (
@@ -86,7 +83,7 @@ const App = () => {
                     <Routes>
                         <Route exact path={'/'} element={<HomePage />} />
                         <Route exact path={'/home'} element={<HomePage />} />
-                        <Route exact path="/login" element={<LoginPage />} />
+                        <Route exact path="/login" element={<LoginPage login={login} />} />
                         <Route exact path="/register" element={<RegisterPage />} />
                         <Route exact path="/my-products" element={<MyProductsPage />} />
                         <Route exact path="/create-product" element={<CreateProductPage />} />

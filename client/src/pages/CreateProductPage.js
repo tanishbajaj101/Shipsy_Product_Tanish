@@ -1,8 +1,10 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ProductService from '../services/product.service';
 
 const CreateProductPage = (props) => {
+    const navigate = useNavigate();
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [type, setType] = useState('Electronics');
@@ -24,7 +26,7 @@ const CreateProductPage = (props) => {
 
         ProductService.createProduct(newProduct).then(
             () => {
-                props.history.push('/my-products');
+                navigate('/my-products');
                 window.location.reload();
             },
             (error) => {
