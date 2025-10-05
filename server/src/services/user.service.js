@@ -20,7 +20,6 @@ class CartService {
         // Decrease stock atomically first
         await this.productService.decrease_stock_or_throw(productId, 1);
 
-        // Add item in cart collection (unique per user)
         const user = await User.findById(userId);
         if (!user) throw new Error('User not found');
 
@@ -30,11 +29,11 @@ class CartService {
         }
         const existing = cart.items.find((i) => i.product.toString() === productId);
         if (existing) {
-            // Revert stock and disallow duplicates per your requirement
-            await this.productService.increase_stock(productId, 1);
-            throw new Error('Product already in cart');
+            // If exists, increment quantity by 1
+            existing.quantity += 1;
+        } else {
+            cart.items.push({ product: productId, quantity: 1 });
         }
-        cart.items.push({ product: productId, quantity: 1 });
         await cart.save();
 
         return await this.get_cart(userId);
@@ -52,8 +51,12 @@ class CartService {
         // Restore stock for one unit
         await this.productService.increase_stock(productId, 1);
 
-        // Remove the item from cart and save
-        cart.items.splice(idx, 1);
+        // Decrement quantity; if zero, remove the item
+        const item = cart.items[idx];
+        item.quantity -= 1;
+        if (item.quantity <= 0) {
+            cart.items.splice(idx, 1);
+        }
         await cart.save();
 
         return await this.get_cart(userId);

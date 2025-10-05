@@ -9,6 +9,7 @@ const HomePage = () => {
     const [sortBy, setSortBy] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [appliedCouponsById, setAppliedCouponsById] = useState({});
+    const [selectedQtyById, setSelectedQtyById] = useState({});
     const [currentPage, setCurrentPage] = useState(1);
     const PAGE_SIZE = 8;
 
@@ -57,6 +58,43 @@ const HomePage = () => {
     const goToPage = (page) => {
         if (page < 1 || page > totalPages) return;
         setCurrentPage(page);
+    };
+
+    const incrementQty = (productId, maxQty) => {
+        setSelectedQtyById(prev => {
+            const current = prev[productId] || 0;
+            const next = Math.min(current + 1, Math.max(0, maxQty));
+            return { ...prev, [productId]: next };
+        });
+    };
+
+    const decrementQty = (productId) => {
+        setSelectedQtyById(prev => {
+            const current = prev[productId] || 0;
+            const next = Math.max(current - 1, 0);
+            return { ...prev, [productId]: next };
+        });
+    };
+
+    const addSelectedToCart = async (product) => {
+        const available = product.quantity || 0;
+        const desired = selectedQtyById[product._id] || 0;
+        const toAdd = Math.min(available, desired);
+        if (toAdd <= 0) return;
+        try {
+            // Call API to add the item `toAdd` times (API supports +1 per call)
+            for (let i = 0; i < toAdd; i++) {
+                await CartService.addToCart(product._id);
+            }
+            // Refresh products to reflect reduced stock
+            const res = await ProductService.getAllProducts(filters, sortBy, searchTerm);
+            setProducts(res.data);
+            // Reset selection for this product
+            setSelectedQtyById(prev => ({ ...prev, [product._id]: 0 }));
+        } catch (e) {
+            console.log(e);
+            alert(e?.response?.data?.message || 'Failed to add to cart');
+        }
     };
 
     return (
@@ -116,24 +154,33 @@ const HomePage = () => {
                             {!showCouponToggle && (
                                 <div className="coupon-badge coupon-badge-muted">No Coupon</div>
                             )}
-                            <button
-                                type="button"
-                                className="btn btn-primary"
-                                disabled={product.quantity <= 0}
-                                onClick={async () => {
-                                    try {
-                                        await CartService.addToCart(product._id);
-                                        // Refresh products to reflect reduced stock
-                                        const res = await ProductService.getAllProducts(filters, sortBy, searchTerm);
-                                        setProducts(res.data);
-                                    } catch (e) {
-                                        console.log(e);
-                                        alert(e?.response?.data?.message || 'Failed to add to cart');
-                                    }
-                                }}
-                            >
-                                Buy
-                            </button>
+                            <div className="qty-actions" style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8 }}>
+                                <button
+                                    type="button"
+                                    className="btn"
+                                    disabled={(selectedQtyById[product._id] || 0) <= 0}
+                                    onClick={() => decrementQty(product._id)}
+                                >
+                                    -
+                                </button>
+                                <span>{selectedQtyById[product._id] || 0}</span>
+                                <button
+                                    type="button"
+                                    className="btn"
+                                    disabled={(selectedQtyById[product._id] || 0) >= (product.quantity || 0)}
+                                    onClick={() => incrementQty(product._id, product.quantity || 0)}
+                                >
+                                    +
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-primary"
+                                    disabled={(product.quantity || 0) <= 0 || (selectedQtyById[product._id] || 0) <= 0}
+                                    onClick={() => addSelectedToCart(product)}
+                                >
+                                    Add to cart
+                                </button>
+                            </div>
                         </div>
                     );
                 })}

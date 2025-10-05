@@ -30,13 +30,23 @@ const CartPage = () => {
         }, 0);
     }, [items]);
 
-    const deleteItem = async (productId) => {
+    const decrement = async (productId) => {
         try {
             await CartService.removeFromCart(productId);
             await load();
         } catch (e) {
             console.log(e);
-            alert(e?.response?.data?.message || 'Failed to remove item');
+            alert(e?.response?.data?.message || 'Failed to decrease quantity');
+        }
+    };
+
+    const increment = async (productId) => {
+        try {
+            await CartService.addToCart(productId);
+            await load();
+        } catch (e) {
+            console.log(e);
+            alert(e?.response?.data?.message || 'Failed to increase quantity');
         }
     };
 
@@ -69,8 +79,24 @@ const CartPage = () => {
                                 <div className="product-price-row">
                                     <span className="price-regular">${item.product.price}</span>
                                 </div>
-                                <p className="product-qty">Qty in cart: {item.quantity}</p>
-                                <button className="btn btn-danger" onClick={() => deleteItem(item.product._id)}>Delete</button>
+                                <div className="qty-actions" style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8 }}>
+                                    <button
+                                        type="button"
+                                        className="btn"
+                                        onClick={() => decrement(item.product._id)}
+                                    >
+                                        -
+                                    </button>
+                                    <span>{item.quantity}</span>
+                                    <button
+                                        type="button"
+                                        className="btn"
+                                        disabled={(item?.product?.quantity || 0) <= 0}
+                                        onClick={() => increment(item.product._id)}
+                                    >
+                                        +
+                                    </button>
+                                </div>
                             </div>
                         ))}
                     </div>
