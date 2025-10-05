@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/tanishbajaj101/Shipsy_Product_Tanish/issues"
   },
-  "homepage": "https://github.com/tanishbajaj101/Shipsy_Product_Tanish#readme"
+  "homepage": "https://github.com/tanishbajaj101/Shipsy_Product_Tanish#readme",
+  "dependencies": {
+    "serverless-http": "^4.0.0"
+  }
 }

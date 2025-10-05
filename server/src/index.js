@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const serverless = require('serverless-http');
 require('dotenv').config();
 
 const userRoutes = require('./routes/user.routes');
@@ -13,11 +14,12 @@ app.use(express.json());
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('MongoDB database connection established successfully'))
+    .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));
 
 // Use routes
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 
-module.exports = app;
+// Wrap with serverless for Vercel
+module.exports = serverless(app);
