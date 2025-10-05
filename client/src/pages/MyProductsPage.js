@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import ProductService from '../services/product.service';
+import { getProductTypeImage } from '../utils/productTypeImages';
 import EditProductModal from '../components/EditProductModal';
 
 const MyProductsPage = () => {
@@ -76,20 +77,29 @@ const MyProductsPage = () => {
     return (
         <div className="container">
             <h1>My Products</h1>
-            <div className="product-list">
+            <div className="product-list product-list-rows">
                 {visibleProducts.map(product => {
                     return (
-                        <div key={product._id} className="product-card">
-                            <h3 className="product-title">{product.name}</h3>
-                            <p className="product-desc">{product.description}</p>
-                            <p className="product-meta">Type: {product.type}</p>
-                            <div className="product-price-row">
-                                <span className="price-regular">${product.price}</span>
+                        <div key={product._id} className="product-card product-card-row">
+                            <div className="product-media">
+                                <img
+                                    src={getProductTypeImage(product.type)}
+                                    alt={product.type || 'Product'}
+                                    className="product-type-image"
+                                />
                             </div>
-                            <p className="product-qty">Qty: {product.quantity}</p>
-                            <div className="actions-row">
-                                <button onClick={() => handleDelete(product._id)} className="btn btn-danger">Delete</button>
-                                <button onClick={() => openModal(product)} className="btn btn-primary">Edit</button>
+                            <div className="product-content">
+                                <h3 className="product-title">{product.name}</h3>
+                                <p className="product-desc">{product.description}</p>
+                                <p className="product-meta">Type: {product.type}</p>
+                                <div className="product-price-row">
+                                    <span className="price-regular">${product.price}</span>
+                                </div>
+                                <p className="product-qty">Qty: {product.quantity}</p>
+                                <div className="actions-row">
+                                    <button onClick={() => handleDelete(product._id)} className="btn btn-danger">Delete</button>
+                                    <button onClick={() => openModal(product)} className="btn btn-primary">Edit</button>
+                                </div>
                             </div>
                         </div>
                     );
