@@ -41,6 +41,16 @@ router.get('/cart', authManager.isAuthenticated.bind(authManager), async (req, r
     }
 });
 
+// Place checkout BEFORE param routes to avoid matching 'checkout' as :productId
+router.post('/cart/checkout', authManager.isAuthenticated.bind(authManager), async (req, res) => {
+    try {
+        const items = await cartService.clear_cart(req.user.userId);
+        res.json(items);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
 router.post('/cart/:productId', authManager.isAuthenticated.bind(authManager), async (req, res) => {
     try {
         const items = await cartService.add_to_cart(req.user.userId, req.params.productId);
@@ -53,15 +63,6 @@ router.post('/cart/:productId', authManager.isAuthenticated.bind(authManager), a
 router.delete('/cart/:productId', authManager.isAuthenticated.bind(authManager), async (req, res) => {
     try {
         const items = await cartService.remove_from_cart(req.user.userId, req.params.productId);
-        res.json(items);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-});
-
-router.post('/cart/checkout', authManager.isAuthenticated.bind(authManager), async (req, res) => {
-    try {
-        const items = await cartService.clear_cart(req.user.userId);
         res.json(items);
     } catch (error) {
         res.status(400).json({ message: error.message });
