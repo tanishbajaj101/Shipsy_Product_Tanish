@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 require('dotenv').config();
 
 const userRoutes = require('./routes/user.routes');
@@ -21,12 +22,17 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 
-// Serve the React build when running as a unified server (e.g., on Render)
+// Serve the React build only if it exists (server-only deployments won't have it)
 const clientBuildPath = path.join(__dirname, '../../client/build');
-app.use(express.static(clientBuildPath));
-app.get(/^(?!\/api\/).*/, (req, res) => {
-    return res.sendFile(path.join(clientBuildPath, 'index.html'));
-});
+if (fs.existsSync(clientBuildPath)) {
+    app.use(express.static(clientBuildPath));
+    app.get(/^(?!\/api\/).*/, (req, res) => {
+        return res.sendFile(path.join(clientBuildPath, 'index.html'));
+    });
+} else {
+    // Basic root route so health checks don't 404 on server-only deployments
+    app.get('/', (req, res) => res.status(200).send('API OK'));
+}
 
 // Export Express app for Vercel Node runtime
 module.exports = app;

@@ -29,14 +29,106 @@
 .product-list {
     display: flex;
     flex-wrap: wrap;
+    gap: 16px;
 }
 
 .product-card {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
+    border: 1px solid #e7e7e7;
+    border-radius: 12px;
+    padding: 16px;
     margin: 10px;
     width: 300px;
+    background: #ffffff;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+}
+
+.product-title {
+    margin: 0 0 4px 0;
+}
+
+.product-desc {
+    color: #666;
+    margin: 0 0 8px 0;
+    min-height: 38px;
+}
+
+.product-meta, .product-qty {
+    color: #777;
+    margin: 0 0 8px 0;
+    font-size: 14px;
+}
+
+.product-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin: 8px 0 12px 0;
+}
+
+.price-regular {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.price-original {
+    font-size: 14px;
+    color: #9ca3af;
+    text-decoration: line-through;
+}
+
+.price-discounted {
+    font-size: 22px;
+    font-weight: 800;
+    color: #065f46; /* emerald-900 */
+}
+
+.btn {
+    cursor: pointer;
+}
+
+.btn-coupon {
+    margin-top: 8px;
+    background: linear-gradient(135deg, #f59e0b, #f97316);
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 9999px;
+    font-weight: 600;
+}
+
+.btn-coupon:hover {
+    filter: brightness(0.95);
+}
+
+.btn-coupon-active {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.coupon-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+.coupon-badge-muted {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.actions-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
 }
 
 .filters {
@@ -45,6 +137,34 @@
 
 .filters input, .filters select {
     margin-right: 10px;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.pagination-controls button {
+    margin: 0 4px;
+    padding: 6px 10px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.pagination-controls button.active {
+    background: #111827;
+    color: #ffffff;
+    border-color: #111827;
+}
+
+.pagination-controls button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .modal-overlay {
