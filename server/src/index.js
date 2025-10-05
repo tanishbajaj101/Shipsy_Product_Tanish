@@ -24,10 +24,7 @@ app.use('/api/products', productRoutes);
 // Serve the React build when running as a unified server (e.g., on Render)
 const clientBuildPath = path.join(__dirname, '../../client/build');
 app.use(express.static(clientBuildPath));
-app.get('*', (req, res) => {
-    if (req.path.startsWith('/api/')) {
-        return res.status(404).json({ message: 'Not Found' });
-    }
+app.get(/^(?!\/api\/).*/, (req, res) => {
     return res.sendFile(path.join(clientBuildPath, 'index.html'));
 });
 
