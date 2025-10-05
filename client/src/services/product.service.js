@@ -2,7 +2,8 @@
 import axios from 'axios';
 import authHeader from './auth-header';
 
-const API_URL = process.env.REACT_APP_API_URL + '/products/';
+const baseUrl = process.env.REACT_APP_API_URL || '/api';
+const API_URL = baseUrl + '/products/';
 
 class ProductService {
     getAllProducts(filters, sortBy, searchTerm) {

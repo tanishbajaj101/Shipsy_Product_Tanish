@@ -25,7 +25,7 @@ router.get('/my-products', authManager.isAuthenticated.bind(authManager), async 
         const products = await productService.list_user_products(req.user.userId);
         res.json(products);
     } catch (error) {
-        res.status(5.00).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 });
 
