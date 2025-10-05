@@ -107,11 +107,19 @@ code {
 .btn-secondary { background: linear-gradient(135deg, #334155, #1f2937); border-color: transparent; }
 
 /* Cards & lists */
-.product-list {
+.product-list { /* keep base for other places */
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
   gap: 20px;
-  justify-content: center; /* center grid tracks */
+  justify-content: center;
+}
+
+/* Row list override: one card per row, equal spacing */
+.product-list-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center; /* center the row cards horizontally */
 }
 
 .product-card {
@@ -120,6 +128,40 @@ code {
   padding: 18px;
   background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0)) , var(--surface);
   box-shadow: var(--card-shadow);
+}
+
+/* Row variant: media left, content right */
+.product-card-row {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+}
+
+/* Ensure row cards expand to full available width inside the container */
+.product-card.product-card-row {
+  width: 100%;
+  max-width: 100%;
+}
+
+.product-media {
+  flex: 0 0 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-type-image {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.product-content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .product-title { margin: 0 0 6px 0; }

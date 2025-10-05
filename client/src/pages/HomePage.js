@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import ProductService from '../services/product.service';
 import CartService from '../services/cart.service';
+import { getProductTypeImage } from '../utils/productTypeImages';
 
 const HomePage = () => {
     const [products, setProducts] = useState([]);
@@ -120,18 +121,26 @@ const HomePage = () => {
                     <option value="desc">Price: High to Low</option>
                 </select>
             </div>
-            <div className="product-list">
+            <div className="product-list product-list-rows">
                 {visibleProducts.map(product => {
                     const isApplied = !!appliedCouponsById[product._id];
                     const showCouponToggle = !!product.couponCodeAvailable;
                     const discounted = getDiscountedPrice(product.price);
 
                     return (
-                        <div key={product._id} className="product-card">
-                            <h3 className="product-title">{product.name}</h3>
-                            <p className="product-desc">{product.description}</p>
-                            <p className="product-meta">Type: {product.type}</p>
-                            <div className="product-price-row">
+                        <div key={product._id} className="product-card product-card-row">
+                            <div className="product-media">
+                                <img
+                                    src={getProductTypeImage(product.type)}
+                                    alt={product.type || 'Product'}
+                                    className="product-type-image"
+                                />
+                            </div>
+                            <div className="product-content">
+                                <h3 className="product-title">{product.name}</h3>
+                                <p className="product-desc">{product.description}</p>
+                                <p className="product-meta">Type: {product.type}</p>
+                                <div className="product-price-row">
                                 {isApplied ? (
                                     <>
                                         <span className="price-discounted">${discounted}</span>
@@ -140,46 +149,47 @@ const HomePage = () => {
                                 ) : (
                                     <span className="price-regular">${product.price}</span>
                                 )}
-                            </div>
-                            <p className="product-qty">Qty: {product.quantity}</p>
-                            {showCouponToggle && (
-                                <button
-                                    type="button"
-                                    className={`btn btn-coupon ${isApplied ? 'btn-coupon-active' : ''}`}
-                                    onClick={() => toggleCoupon(product._id)}
-                                >
-                                    {isApplied ? 'Remove Coupon' : 'Apply Coupon'}
-                                </button>
-                            )}
-                            {!showCouponToggle && (
-                                <div className="coupon-badge coupon-badge-muted">No Coupon</div>
-                            )}
-                            <div className="qty-actions" style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8 }}>
-                                <button
-                                    type="button"
-                                    className="btn"
-                                    disabled={(selectedQtyById[product._id] || 0) <= 0}
-                                    onClick={() => decrementQty(product._id)}
-                                >
-                                    -
-                                </button>
-                                <span>{selectedQtyById[product._id] || 0}</span>
-                                <button
-                                    type="button"
-                                    className="btn"
-                                    disabled={(selectedQtyById[product._id] || 0) >= (product.quantity || 0)}
-                                    onClick={() => incrementQty(product._id, product.quantity || 0)}
-                                >
-                                    +
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-primary"
-                                    disabled={(product.quantity || 0) <= 0 || (selectedQtyById[product._id] || 0) <= 0}
-                                    onClick={() => addSelectedToCart(product)}
-                                >
-                                    Add to cart
-                                </button>
+                                </div>
+                                <p className="product-qty">Qty: {product.quantity}</p>
+                                {showCouponToggle && (
+                                    <button
+                                        type="button"
+                                        className={`btn btn-coupon ${isApplied ? 'btn-coupon-active' : ''}`}
+                                        onClick={() => toggleCoupon(product._id)}
+                                    >
+                                        {isApplied ? 'Remove Coupon' : 'Apply Coupon'}
+                                    </button>
+                                )}
+                                {!showCouponToggle && (
+                                    <div className="coupon-badge coupon-badge-muted">No Coupon</div>
+                                )}
+                                <div className="qty-actions" style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8 }}>
+                                    <button
+                                        type="button"
+                                        className="btn"
+                                        disabled={(selectedQtyById[product._id] || 0) <= 0}
+                                        onClick={() => decrementQty(product._id)}
+                                    >
+                                        -
+                                    </button>
+                                    <span>{selectedQtyById[product._id] || 0}</span>
+                                    <button
+                                        type="button"
+                                        className="btn"
+                                        disabled={(selectedQtyById[product._id] || 0) >= (product.quantity || 0)}
+                                        onClick={() => incrementQty(product._id, product.quantity || 0)}
+                                    >
+                                        +
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                        disabled={(product.quantity || 0) <= 0 || (selectedQtyById[product._id] || 0) <= 0}
+                                        onClick={() => addSelectedToCart(product)}
+                                    >
+                                        Add to cart
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     );
