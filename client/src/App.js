@@ -10,12 +10,14 @@ import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import MyProductsPage from './pages/MyProductsPage';
 import CreateProductPage from './pages/CreateProductPage';
+import CartPage from './pages/CartPage';
 
 const App = () => {
     const [currentUser, setCurrentUser] = useState(AuthService.getCurrentUser());
 
     const logOut = () => {
         AuthService.logout();
+        // Clear session-scoped cart by hard reload to reset memory and any volatile state
         setCurrentUser(undefined);
     };
 
@@ -41,6 +43,14 @@ const App = () => {
                             <li className="nav-item">
                                 <Link to={'/my-products'} className="nav-link">
                                     My Products
+                                </Link>
+                            </li>
+                        )}
+
+                        {currentUser && (
+                            <li className="nav-item">
+                                <Link to={'/cart'} className="nav-link">
+                                    My Cart
                                 </Link>
                             </li>
                         )}
@@ -87,6 +97,7 @@ const App = () => {
                         <Route exact path="/register" element={<RegisterPage />} />
                         <Route exact path="/my-products" element={<MyProductsPage />} />
                         <Route exact path="/create-product" element={<CreateProductPage />} />
+                        <Route exact path="/cart" element={<CartPage />} />
                     </Routes>
                 </div>
             </div>

@@ -3,6 +3,27 @@ const Product = require('../models/product.model');
 const User = require('../models/user.model');
 
 class ProductService {
+    async decrease_stock_or_throw(productId, delta = 1) {
+        // Atomically decrease quantity ensuring it does not go below 0
+        const updated = await Product.findOneAndUpdate(
+            { _id: productId, quantity: { $gte: delta } },
+            { $inc: { quantity: -delta } },
+            { new: true }
+        );
+        if (!updated) {
+            throw new Error('Insufficient quantity');
+        }
+        return updated;
+    }
+
+    async increase_stock(productId, delta = 1) {
+        return await Product.findByIdAndUpdate(
+            productId,
+            { $inc: { quantity: delta } },
+            { new: true }
+        );
+    }
+
     async create_product(productData, owner_id) {
         const product = new Product({ ...productData, owner_id });
         await product.save();

@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import ProductService from '../services/product.service';
+import CartService from '../services/cart.service';
 
 const HomePage = () => {
     const [products, setProducts] = useState([]);
@@ -115,6 +116,24 @@ const HomePage = () => {
                             {!showCouponToggle && (
                                 <div className="coupon-badge coupon-badge-muted">No Coupon</div>
                             )}
+                            <button
+                                type="button"
+                                className="btn btn-primary"
+                                disabled={product.quantity <= 0}
+                                onClick={async () => {
+                                    try {
+                                        await CartService.addToCart(product._id);
+                                        // Refresh products to reflect reduced stock
+                                        const res = await ProductService.getAllProducts(filters, sortBy, searchTerm);
+                                        setProducts(res.data);
+                                    } catch (e) {
+                                        console.log(e);
+                                        alert(e?.response?.data?.message || 'Failed to add to cart');
+                                    }
+                                }}
+                            >
+                                Buy
+                            </button>
                         </div>
                     );
                 })}
