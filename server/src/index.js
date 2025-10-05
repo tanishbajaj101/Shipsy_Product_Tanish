@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const userRoutes = require('./routes/user.routes');
@@ -19,6 +20,16 @@ mongoose.connect(process.env.MONGO_URI)
 // Use routes (include '/api' to match Vercel rewrite)
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
+
+// Serve the React build when running as a unified server (e.g., on Render)
+const clientBuildPath = path.join(__dirname, '../../client/build');
+app.use(express.static(clientBuildPath));
+app.get('*', (req, res) => {
+    if (req.path.startsWith('/api/')) {
+        return res.status(404).json({ message: 'Not Found' });
+    }
+    return res.sendFile(path.join(clientBuildPath, 'index.html'));
+});
 
 // Export Express app for Vercel Node runtime
 module.exports = app;
