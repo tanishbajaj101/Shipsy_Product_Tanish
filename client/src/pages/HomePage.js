@@ -14,8 +14,12 @@ const HomePage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const PAGE_SIZE = 8;
 
-    const COUPON_DISCOUNT = 0.1; // 10%
-
+    const COUPON_CODE_TO_DISCOUNT = {
+        '10%': 0.1,
+        '15%': 0.15,
+        '20%': 0.2
+    };
+    // Map the product couponCode enum (e.g., '10%', '15%', '20%') to a numeric discount fraction
     useEffect(() => {
         ProductService.getAllProducts(filters, sortBy, searchTerm)
             .then(response => {
@@ -47,7 +51,8 @@ const HomePage = () => {
         }));
     };
 
-    const getDiscountedPrice = (price) => {
+    const getDiscountedPrice = (couponCode, price) => {
+        COUPON_DISCOUNT = COUPON_CODE_TO_DISCOUNT[product.couponCode] || 0;
         const discounted = Number(price) * (1 - COUPON_DISCOUNT);
         return Math.max(0, discounted).toFixed(2);
     };
@@ -124,8 +129,8 @@ const HomePage = () => {
             <div className="product-list product-list-rows">
                 {visibleProducts.map(product => {
                     const isApplied = !!appliedCouponsById[product._id];
-                    const showCouponToggle = !!product.couponCodeAvailable;
-                    const discounted = getDiscountedPrice(product.price);
+                    const showCouponToggle = !!product.couponCodeAvailable && !!product.couponCode;
+                    const discounted = getDiscountedPrice(product.couponCode, product.price);
 
                     return (
                         <div key={product._id} className="product-card product-card-row">

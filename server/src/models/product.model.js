@@ -26,9 +26,16 @@ const productSchema = new mongoose.Schema({
         required: true,
         min: 1
     },
+    couponCode: {
+        type: String,
+        enum: ['10%', '15%', '20%'],
+        default: '15%',
+        required: false
+    },
     couponCodeAvailable: {
         type: Boolean,
-        default: false
+        default: false,
+        required: false
     },
     quantity: {
         type: Number,
